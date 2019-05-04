@@ -10,6 +10,9 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import static android.support.v4.content.WakefulBroadcastReceiver.startWakefulService;
@@ -19,7 +22,6 @@ public class AlarmReceiver extends BroadcastReceiver implements CreateTask.View{
     private NotificationManager alarmNotificationManager;
 
     //Notification ID for Alarm
-    public static final int NOTIFICATION_ID = 1;
     private static Uri alarmSound;
     private int taskId;
     private Task currentTask;
@@ -28,11 +30,6 @@ public class AlarmReceiver extends BroadcastReceiver implements CreateTask.View{
 
     @Override
     public void onReceive(Context context, Intent intent) {
-
-        //This will send a notification message and show notification in notification tray
-        /*ComponentName comp = new ComponentName(context.getPackageName(),
-                AlarmNotificationService.class.getName());
-        startWakefulService(context, (intent.setComponent(comp)));*/
 
         presenter = new TaskPresenter(context, this);
         taskId = intent.getIntExtra("taskId",0);
@@ -62,7 +59,7 @@ public class AlarmReceiver extends BroadcastReceiver implements CreateTask.View{
         alamNotificationBuilder.setSound(alarmSound);
 
         //notiy notification manager about new notification
-        alarmNotificationManager.notify(NOTIFICATION_ID, alamNotificationBuilder.build());
+        alarmNotificationManager.notify(taskId, alamNotificationBuilder.build());
     }
 
     @Override

@@ -76,7 +76,7 @@ public class TaskActivity extends AppCompatActivity implements CreateTask.View{
             e.printStackTrace();
         }
 
-        downTimer = new CountDownTimer(reminderTime, 1000) {
+        downTimer = new CountDownTimer(reminderTime, 1) {
             @Override
             public void onTick(long millisUntilFinished) {
                 reminderTime = millisUntilFinished;
@@ -85,7 +85,7 @@ public class TaskActivity extends AppCompatActivity implements CreateTask.View{
 
             @Override
             public void onFinish() {
-                reminderTime = 900L;
+                reminderTime = 0L;
                 updateTimer();
             }
         }.start();
@@ -93,7 +93,6 @@ public class TaskActivity extends AppCompatActivity implements CreateTask.View{
 
     private void updateTimer() {
         Long seconds, minute, hour, day;
-        System.out.println(reminderTime);
         reminderTime = reminderTime / 1000 +  ((!(reminderTime % 1000 == 0)) ? 1L : 0L);
         seconds = reminderTime % 60;
         reminderTime = reminderTime / 60;
@@ -139,16 +138,6 @@ public class TaskActivity extends AppCompatActivity implements CreateTask.View{
         alertBuilder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-
-                Intent alarmIntent = new Intent(TaskActivity.this, AlarmReceiver.class);
-                pendingIntent = PendingIntent.getBroadcast(TaskActivity.this, taskId, alarmIntent, 0);
-
-                AlarmManager manager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-                manager.cancel(pendingIntent);//cancel the alarm manager of the pending intent
-
-                //Stop the Media Player Service to stop sound
-                //stopService(new Intent(TaskActivity.this, AlarmSoundService.class));
-
 
                 presenter.deleteTask(currentTask);
                 finish();

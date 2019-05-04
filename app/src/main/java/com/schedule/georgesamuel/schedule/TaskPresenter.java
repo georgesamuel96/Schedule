@@ -38,22 +38,7 @@ public class TaskPresenter implements CreateTask.Presenter {
         taskId++;
         task.setId(taskId);
 
-        Intent alarmIntent = new Intent(context, AlarmReceiver.class);
-        alarmIntent.putExtra("taskId", taskId);
-        pendingIntent = PendingIntent.getBroadcast(context, taskId, alarmIntent, 0);
-
-        String dateTime = task.getDate() + " " + task.getTime();
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
-        try {
-            Date mDateTime = sdf.parse(dateTime);
-            int timeInSeconds = (int) mDateTime.getTime();
-            int reminderTime = timeInSeconds - (int) System.currentTimeMillis();
-            //reminderTime = reminderTime / 1000 + (!(reminderTime % 1000 == 0)? 1 : 0);
-            triggerAlarmManager(reminderTime);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
+        getTimeInMilliseconds(task);
 
         taskDatabase.getTaskDao().insertTask(task);
 
@@ -78,27 +63,50 @@ public class TaskPresenter implements CreateTask.Presenter {
 
     @Override
     public void updateTask(Task task) {
+
+        getTimeInMilliseconds(task);
+
         taskDatabase.getTaskDao().updateTask(task);
     }
 
     @Override
     public void deleteTask(Task task) {
+
+        Intent alarmIntent = new Intent(context, AlarmReceiver.class);
+        pendingIntent = PendingIntent.getBroadcast(context, task.getId(), alarmIntent, 0);
+
+        AlarmManager manager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        manager.cancel(pendingIntent);//cancel the alarm manager of the pending intent
+
+        //Stop the Media Player Service to stop sound
+        //stopService(new Intent(TaskActivity.this, AlarmSoundService.class));
+
         taskDatabase.getTaskDao().deleteTask(task);
     }
 
     //Trigger alarm manager with entered time interval
-    public void triggerAlarmManager(int alarmTriggerTime) {
+    private void triggerAlarmManager(Long alarmTriggerTime) {
 
-        // get a Calendar object with current time
-        Calendar cal = Calendar.getInstance();
-
-        // add alarmTriggerTime seconds to the calendar object
-        cal.add(Calendar.MILLISECOND, alarmTriggerTime);
-
-        //get instance of alarm manager
         AlarmManager manager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 
         //set alarm manager with entered timer by converting into milliseconds
-        manager.set(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), pendingIntent);
+        manager.set(AlarmManager.RTC_WAKEUP, alarmTriggerTime, pendingIntent);
+    }
+
+    private void getTimeInMilliseconds(Task task){
+
+        Intent alarmIntent = new Intent(context, AlarmReceiver.class);
+        alarmIntent.putExtra("taskId", task.getId());
+        pendingIntent = PendingIntent.getBroadcast(context, task.getId(), alarmIntent, 0);
+
+        String dateTime = task.getDate() + " " + task.getTime();
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+        try {
+            Date mDateTime = sdf.parse(dateTime);
+            triggerAlarmManager(mDateTime.getTime());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
     }
 }
