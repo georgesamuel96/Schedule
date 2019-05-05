@@ -1,7 +1,6 @@
 # Schedule
-In this app you can add your date with particular date and time that what you need.
-In this date you will recieve notificationin your phone. 
-You can know when will this date happen.
+In this app you can add your date with particular date and time that what you need. 
+In this date you will receive notification in your phone. You can know when will this date happen.
 
 # Features
  Using Room Persistence Library <br>
