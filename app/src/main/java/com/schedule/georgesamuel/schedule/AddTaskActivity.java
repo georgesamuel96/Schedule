@@ -32,6 +32,7 @@ public class AddTaskActivity extends AppCompatActivity implements CreateTask.Vie
     private RadioGroup radioGroup;
     private RadioButton radioButton;
     private Button addTask;
+    private int year = -1, month = -1, day = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +59,12 @@ public class AddTaskActivity extends AppCompatActivity implements CreateTask.Vie
                 int mYear = currentDate.get(Calendar.YEAR);
                 int mMonth = currentDate.get(Calendar.MONTH);
                 int mDay = currentDate.get(Calendar.DAY_OF_MONTH);
-                dateEt.getEditText().setText("");
+                if(year == -1){
+                    year = mYear;
+                    month = mMonth;
+                    day = mDay;
+                }
+                dateEt.getEditText().setText(day + "/" + month + "/" + year);
                 DatePickerDialog mDatePicker = new DatePickerDialog(AddTaskActivity.this,
                         new DatePickerDialog.OnDateSetListener() {
                             public void onDateSet(DatePicker datepicker, int selectedyear, int selectedmonth, int selectedday) {
@@ -70,8 +76,11 @@ public class AddTaskActivity extends AppCompatActivity implements CreateTask.Vie
                                 SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.ENGLISH);
                                 dateEt.getEditText().setText(sdf.format(myCalendar.getTime()));
 
+                                year = selectedyear;
+                                month = selectedmonth + 1;
+                                day = selectedday;
                             }
-                        }, mYear, mMonth, mDay);
+                        }, year, month, day);
                 mDatePicker.show();
             }
         });
