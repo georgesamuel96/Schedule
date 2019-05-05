@@ -41,7 +41,6 @@ public class AddTaskActivity extends AppCompatActivity implements CreateTask.Vie
 
         toolbar = (android.support.v7.widget.Toolbar) findViewById(R.id.toolBar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Add New Task");
 
         titleET = (TextInputLayout) findViewById(R.id.title);

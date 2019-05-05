@@ -38,6 +38,7 @@ public class UpdateTaskActivity extends AppCompatActivity implements CreateTask.
     private Button updateTask;
     private String[] colors = new String[3];
     private int taskId;
+    private int year = -1, month = -1, day = -1;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -46,7 +47,6 @@ public class UpdateTaskActivity extends AppCompatActivity implements CreateTask.
 
         toolbar = (android.support.v7.widget.Toolbar) findViewById(R.id.toolBar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Update Task");
 
         titleET = (TextInputLayout) findViewById(R.id.title);
@@ -74,7 +74,12 @@ public class UpdateTaskActivity extends AppCompatActivity implements CreateTask.
                 int mYear = currentDate.get(Calendar.YEAR);
                 int mMonth = currentDate.get(Calendar.MONTH);
                 int mDay = currentDate.get(Calendar.DAY_OF_MONTH);
-                dateEt.getEditText().setText("");
+                if(year == -1){
+                    year = mYear;
+                    month = mMonth;
+                    day = mDay;
+                }
+                dateEt.getEditText().setText(day + "/" + month + "/" + year);
                 DatePickerDialog mDatePicker = new DatePickerDialog(UpdateTaskActivity.this,
                         new DatePickerDialog.OnDateSetListener() {
                             public void onDateSet(DatePicker datepicker, int selectedyear, int selectedmonth, int selectedday) {
@@ -86,8 +91,12 @@ public class UpdateTaskActivity extends AppCompatActivity implements CreateTask.
                                 SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.ENGLISH);
                                 dateEt.getEditText().setText(sdf.format(myCalendar.getTime()));
 
+                                year = selectedyear;
+                                month = selectedmonth + 1;
+                                day = selectedday;
+
                             }
-                        }, mYear, mMonth, mDay);
+                        }, year, month, day);
                 mDatePicker.show();
             }
         });

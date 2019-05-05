@@ -26,7 +26,8 @@
                 android:layout_height="wrap_content"
                 android:text="Title"
                 android:textSize="24sp"
-                android:textColor="@color/colorText"/>
+                android:textColor="@color/colorText"
+                android:maxLines="2"/>
 
             <TextView
                 android:id="@+id/content"
@@ -35,7 +36,9 @@
                 android:text="content"
                 android:layout_below="@id/title"
                 android:textSize="16sp"
-                android:textColor="@color/colorText"/>
+                android:textColor="@color/colorText"
+                android:maxLines="5"
+                android:layout_marginTop="@dimen/_4sdp"/>
 
         </RelativeLayout>
 

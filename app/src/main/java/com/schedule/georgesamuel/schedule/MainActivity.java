@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -21,6 +22,7 @@ public class MainActivity extends AppCompatActivity implements CreateTask.View{
     private RecyclerView recyclerView;
     private TaskAdapter adapter;
     private RecyclerViewClickListener clickListener;
+    private TextView noDates;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,8 +31,8 @@ public class MainActivity extends AppCompatActivity implements CreateTask.View{
 
         toolbar = (android.support.v7.widget.Toolbar) findViewById(R.id.toolBar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setHomeAsUpIndicator(R.mipmap.ic_menu);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        noDates = (TextView) findViewById(R.id.noDates);
 
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -76,12 +78,20 @@ public class MainActivity extends AppCompatActivity implements CreateTask.View{
         taskList.clear();
         taskList.addAll(list);
         adapter.notifyDataSetChanged();
+
+        if(taskList.size() == 0){
+            noDates.setVisibility(View.VISIBLE);
+        }
+        else {
+            noDates.setVisibility(View.GONE);
+        }
     }
 
     @Override
     protected void onRestart() {
         super.onRestart();
 
+        System.out.println("onRestart");
         presenter.getTasks();
 
     }
